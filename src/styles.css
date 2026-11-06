@@ -230,6 +230,8 @@ button, input, textarea { font: inherit; color: inherit; }
   justify-content: space-between;
   padding: 16px 18px;
 }
+/* 写真のないカードは、文字の量に合わせて高さを伸ばす */
+.entry-card-pending .entry-text { position: relative; inset: auto; min-height: 168px; gap: 12px; }
 .entry-date { display: flex; align-items: baseline; gap: 8px; }
 .entry-day { font-family: var(--font-display); font-size: 48px; font-weight: 700; line-height: 1; }
 .entry-month { font-size: 14px; font-weight: 600; }
@@ -257,6 +259,21 @@ button, input, textarea { font: inherit; color: inherit; }
   padding: 64px 16px;
   text-align: center;
 }
+
+/* 一覧画面は濃い背景の上に白い文字を置く */
+.timeline .top-bar,
+.timeline .demo-note,
+.timeline .year-label,
+.timeline .empty,
+.timeline .empty .muted { color: #fff; }
+.timeline .next-date {
+  border-color: transparent;
+  background: var(--surface-glass);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+  box-shadow: var(--shadow);
+}
+.timeline .fab { background: #fff; color: #8f2c50; }
 
 /* 記録ページ */
 .has-mood { background: transparent; }

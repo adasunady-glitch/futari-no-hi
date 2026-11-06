@@ -168,6 +168,29 @@ export function computeMood({ date, hours = [], places = [], dominant = null }) 
   };
 }
 
+// 一覧画面の背景。白い文字を常に読めるよう、どの時間帯でも濃い色だけで作る。
+const HOME_PALETTES = {
+  morning: ['#2f4a86', '#8f4a80', '#a84f5a'],
+  day: ['#174f7d', '#1b6f88', '#1f7671'],
+  dusk: ['#2b2a63', '#7f3a6c', '#a84842'],
+  night: ['#0d0f2b', '#231a52', '#4a2564'],
+};
+
+export function homeMood(now = new Date()) {
+  const pad = (value) => String(value).padStart(2, '0');
+  const date = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
+  const time = timeOfDay(now.getHours() + now.getMinutes() / 60, date);
+  return {
+    name: TIME_NAMES[time],
+    time,
+    season: seasonOf(date),
+    colors: HOME_PALETTES[time].map((color) => blend(color, SEASON_TINTS[seasonOf(date)], 0.06)),
+    ink: 'light',
+    particle: time === 'night' ? 'stars' : 'none',
+    wave: false,
+  };
+}
+
 export function moodGradient(mood) {
   const [a, b, c] = mood.colors;
   return `linear-gradient(172deg, ${a} 0%, ${b} 56%, ${c} 100%)`;

@@ -1,5 +1,6 @@
-import { computeMood, moodGradient } from '../lib/mood.js';
+import { computeMood, homeMood, moodGradient } from '../lib/mood.js';
 import { daysUntil, h, openSheet, parts, toast, todayText } from '../lib/dom.js';
+import { applyMood } from './atmosphere.js';
 
 function commentChip(entry, partnerName) {
   if (entry.iWrote && entry.partnerWrote) return h('span', { class: 'chip chip-open' }, 'ふたりのことば');
@@ -123,6 +124,7 @@ function openSettings({ store, session, refresh }) {
 export async function renderTimeline(context) {
   const { store, session, refresh } = context;
   const entries = await store.listEntries();
+  applyMood(homeMood());
   const today = todayText();
   const upcoming = entries.filter((entry) => entry.date > today);
   const past = entries.filter((entry) => entry.date <= today);

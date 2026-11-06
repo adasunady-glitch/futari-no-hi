@@ -1,6 +1,6 @@
 // ブラウザで tests/index.html を開くと実行される。追加のインストールは不要。
 import { clusterPlaces, commentState, hammingDistance, isWithinDay, markDuplicates, selectBest } from '../src/lib/select.js';
-import { computeMood, luminance, seasonOf, timeOfDay } from '../src/lib/mood.js';
+import { computeMood, homeMood, luminance, seasonOf, timeOfDay } from '../src/lib/mood.js';
 import { categoryFromLabels, countMainFaces } from '../src/lib/vision.js';
 
 const results = document.getElementById('results');
@@ -212,6 +212,26 @@ await test('文字色は背景の明るさに合わせる', () => {
       }
     }
   }
+});
+
+await test('一覧画面の背景はどの時間帯と季節でも白い文字が読める', () => {
+  for (let month = 0; month < 12; month += 1) {
+    for (let hour = 0; hour < 24; hour += 1) {
+      const mood = homeMood(new Date(2026, month, 15, hour));
+      for (const color of mood.colors) {
+        const contrast = 1.05 / (luminance(color) + 0.05);
+        truthy(contrast >= 4.5, `${month + 1}月${hour}時 ${color}: ${contrast.toFixed(2)}`);
+      }
+    }
+  }
+});
+
+await test('一覧画面の背景は時間帯で変わる', () => {
+  equal(homeMood(new Date(2026, 6, 15, 8)).time, 'morning');
+  equal(homeMood(new Date(2026, 6, 15, 13)).time, 'day');
+  equal(homeMood(new Date(2026, 6, 15, 18)).time, 'dusk');
+  equal(homeMood(new Date(2026, 6, 15, 22)).time, 'night');
+  equal(homeMood(new Date(2026, 6, 15, 22)).particle, 'stars');
 });
 
 section('カレンダーの判定（Apps Script）');

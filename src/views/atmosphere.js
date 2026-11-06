@@ -89,8 +89,17 @@ function startParticles(kind) {
   frame = requestAnimationFrame(loop);
 }
 
+// スマホのステータスバーの色も背景に合わせる。color が null なら元の色に戻す。
+function setThemeColor(color) {
+  document.querySelectorAll('meta[name="theme-color"]').forEach((meta) => {
+    meta.dataset.base ??= meta.content;
+    meta.content = color ?? meta.dataset.base;
+  });
+}
+
 export function applyMood(mood) {
   document.getElementById('mood-layer').style.background = moodGradient(mood);
+  setThemeColor(mood.colors[0]);
   document.body.dataset.ink = mood.ink;
   document.body.classList.add('has-mood');
   document.body.classList.toggle('has-wave', Boolean(mood.wave));
@@ -100,6 +109,7 @@ export function applyMood(mood) {
 
 export function clearMood() {
   document.getElementById('mood-layer').style.background = '';
+  setThemeColor(null);
   delete document.body.dataset.ink;
   document.body.classList.remove('has-mood', 'has-wave');
   stopParticles();
